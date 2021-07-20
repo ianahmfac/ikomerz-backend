@@ -88,4 +88,28 @@ class UserController extends Controller
     {
         return ResponseFormatter::success($request->user(), 'Profile User berhasil diambil');
     }
+
+    public function updateProfile(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'username' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255'],
+                'phone' => ['nullable', 'string', 'max:255'],
+            ]);
+
+            $data = $request->all();
+
+            $user = Auth::user();
+            $user->update($data);
+
+            return ResponseFormatter::success($user, 'Profile updated');
+        } catch (Exception $error) {
+            return ResponseFormatter::error([
+                'message' => 'Something went wrong',
+                'error' => $error,
+            ], 'Update profile failed', 500);
+        }
+    }
 }
