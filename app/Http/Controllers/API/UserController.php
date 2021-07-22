@@ -112,4 +112,10 @@ class UserController extends Controller
             ], 'Update profile failed', 500);
         }
     }
+
+    public function logout(Request $request)
+    {
+        $token = $request->user()->currentAccessToken()->delete();
+        return ResponseFormatter::success($token, 'Token revoked');
+    }
 }
